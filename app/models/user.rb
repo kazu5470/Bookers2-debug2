@@ -11,6 +11,26 @@ class User < ApplicationRecord
   validates :name, length: { minimum: 2, maximum: 20 }, uniqueness: true
   validates :introduction, length: {maximum: 50}
 
+  #フォローした、された
+  has_many :relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy 
+  has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+  #一覧画面表示
+  has_many :followings, through: :relationships, source: :followed
+  has_many :followers, through: :reverse_of_relationships, source: :follower
+  
+  #フォローした
+  def follow(user_id)
+    relationships.create(followed_id: user_id)
+  end  
+  #フォロー外す
+  def unfollow(user_id)
+    relationships.find_by(followed_id: user_id).destroy
+  end
+  
+  #フォローしているかどうか
+  def following?(user)
+    followings.include?(user)
+  end  
   
   
   def get_profile_image
