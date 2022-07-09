@@ -9,8 +9,8 @@ class BooksController < ApplicationController
   end
 
   def index
-    @books = Book.all
     @book = Book.new
+    @books = Book.all
   end
 
   def create
@@ -32,6 +32,7 @@ class BooksController < ApplicationController
     if @book.update(book_params)
       redirect_to book_path(@book), notice: "You have updated book successfully."
     else
+      @books = Book.all
       render 'edit'
     end
   end

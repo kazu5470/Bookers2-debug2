@@ -1,21 +1,26 @@
-<h2>Results index</h2>
-
 <table class="table table-hover table-inverse">
   <!--検索対象モデルがUserの時 -->
-  <% if @range == "User" %>
+  <% if @model == "User" %>
+    <h3>Users search for "<%= @content %>"</h3>
     <tbody>
-      <% @users.each do |user| %>
+      <% @records.each do |user| %>
         <tr>
           <td><%= user.name %></td>
         </tr>
       <% end %>
     </tbody>
-  <% else %>
     <!--検索対象モデルがUserではない時(= 検索対象モデルがBookの時) -->
+    <h3>Books search for "<%= @content %>"</h3>
+    <% else %>
     <tbody>
-      <% @books.each do |book| %>
+      <% @records.each do |book| %>
         <tr>
-          <td><%= book.title %></td>
+          <td>
+            <%= link_to(book.user) do %>
+            <%= image_tag book.user.get_profile_image, size:'50x50' %>
+            <% end %>
+          </td>          
+          <td><%= link_to book.title, book_path(book.id) %></td>
           <td><%= book.body %></td>
         </tr>
       <% end %>

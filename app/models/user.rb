@@ -33,7 +33,7 @@ class User < ApplicationRecord
   end  
   
   #検索方法分岐条件
-  def self.looks(search, word)
+  def User.looks(search, word)
     if search == "perfect_match"
       @user = User.where("name LIKE?", "#{word}")
     elsif search == "forward_match"
