@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_many :books
+  has_many :books, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :book_comments, dependent: :destroy  
   has_one_attached :profile_image
@@ -33,15 +33,15 @@ class User < ApplicationRecord
   end  
   
   #検索方法分岐条件
-  def self.search_for(content, method)
-    if method == 'perfect'
-      User.where(name: content)
-    elsif method == 'forward'
-      User.where('name LIKE ?', content + '%')
-    elsif method == 'backward'
-      User.where('name LIKE ?', '%' + content)
+  def self.looks(searches, words)
+    if searches == 'perfect'
+      @user = User.where("name LIKE ?", "#{words}")
+    elsif searches == 'forward'
+      @user = User.where("name LIKE ?", "#{words}%")
+    elsif searches == 'backward'
+      @user = User.where("name LIKE ?", "%#{words}")
     else
-      User.where('name LIKE ?', '%' + content + '%')
+      @user = User.where("name LIKE ?", "%#{words}%")
     end
   end  
   
